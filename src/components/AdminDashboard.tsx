@@ -28,11 +28,31 @@ export default function AdminDashboard() {
   const [empresaNome, setEmpresaNome] = useState('Velo Beleza');
   const [empresaSlogan, setEmpresaSlogan] = useState('Central de Atendimento e Fidelidade');
   const [empresaLogo, setEmpresaLogo] = useState('');
-  const [empresaVideo, setEmpresaVideo] = useState(''); // Estado para o vídeo
+  const [empresaVideo, setEmpresaVideo] = useState(''); 
+  const [empresaSobre, setEmpresaSobre] = useState(''); // NOVO
+  const [empresaCnpj, setEmpresaCnpj] = useState('');   // NOVO
+  const [empresaGoogleLink, setEmpresaGoogleLink] = useState(''); // NOVO
   
   // Estados de Loading do Cloudinary
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+
+  // Busca os dados salvos no Firebase ao carregar o painel
+  useEffect(() => {
+    const carregarDadosSite = async () => {
+      const config = await loyaltyService.getConfigSite();
+      if (config) {
+        if (config.nome) setEmpresaNome(config.nome);
+        if (config.slogan) setEmpresaSlogan(config.slogan);
+        if (config.logo) setEmpresaLogo(config.logo);
+        if (config.video) setEmpresaVideo(config.video);
+        if (config.sobre) setEmpresaSobre(config.sobre);
+        if (config.cnpj) setEmpresaCnpj(config.cnpj);
+        if (config.googleLink) setEmpresaGoogleLink(config.googleLink);
+      }
+    };
+    carregarDadosSite();
+  }, []);
 
   // Função de Upload para o Cloudinary (Direto do Navegador)
   const handleUploadCloudinary = async (e: React.ChangeEvent<HTMLInputElement>, tipo: 'image' | 'video') => {
@@ -381,9 +401,9 @@ export default function AdminDashboard() {
                     Site e SEO (Google)
                   </h4>
                   <div className="space-y-4">
-                    <textarea placeholder="Conte um pouco sobre o estúdio..." className="w-full bg-zinc-900 border border-zinc-500 rounded-xl py-3 px-4 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 text-sm text-white h-24 placeholder:text-zinc-400 transition-all" />
-                    <input type="text" placeholder="CNPJ da Empresa" className="w-full bg-zinc-900 border border-zinc-500 rounded-xl py-3 px-4 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 text-sm text-white placeholder:text-zinc-400 transition-all" />
-                    <input type="text" placeholder="Link do Google Meu Negócio" className="w-full bg-zinc-900 border border-zinc-500 rounded-xl py-3 px-4 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 text-sm text-white placeholder:text-zinc-400 transition-all" />
+                    <textarea value={empresaSobre} onChange={(e) => setEmpresaSobre(e.target.value)} placeholder="Conte um pouco sobre o estúdio..." className="w-full bg-zinc-900 border border-zinc-500 rounded-xl py-3 px-4 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 text-sm text-white h-24 placeholder:text-zinc-400 transition-all" />
+                    <input value={empresaCnpj} onChange={(e) => setEmpresaCnpj(e.target.value)} type="text" placeholder="CNPJ da Empresa" className="w-full bg-zinc-900 border border-zinc-500 rounded-xl py-3 px-4 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 text-sm text-white placeholder:text-zinc-400 transition-all" />
+                    <input value={empresaGoogleLink} onChange={(e) => setEmpresaGoogleLink(e.target.value)} type="text" placeholder="Link do Google Meu Negócio" className="w-full bg-zinc-900 border border-zinc-500 rounded-xl py-3 px-4 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 text-sm text-white placeholder:text-zinc-400 transition-all" />
                   </div>
                 </div>
 
@@ -394,7 +414,10 @@ export default function AdminDashboard() {
                         nome: empresaNome,
                         slogan: empresaSlogan,
                         logo: empresaLogo,
-                        video: empresaVideo
+                        video: empresaVideo,
+                        sobre: empresaSobre,
+                        cnpj: empresaCnpj,
+                        googleLink: empresaGoogleLink
                       };
                       await loyaltyService.salvarConfigSite(configSite);
                       alert("Configurações do Velo Beleza salvas com sucesso!"); 

@@ -30,7 +30,8 @@ export default function LandingPage() {
           nome: config.nome || prev.nome,
           slogan: config.slogan || prev.slogan,
           logo: config.logo || prev.logo,
-          videoReels: config.video || prev.videoReels
+          videoReels: config.video || prev.videoReels,
+          cnpj: config.cnpj || prev.cnpj
         }));
       }
     };
