@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { db } from '../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -29,7 +28,7 @@ interface FirestoreErrorInfo {
 }
 
 export default function AnamnesePage() {
-  const [searchParams] = useSearchParams();
+  const searchParams = new URLSearchParams(window.location.search);
   const clienteId = searchParams.get('clienteId');
   const tipo = searchParams.get('tipo');
 
@@ -39,7 +38,7 @@ export default function AnamnesePage() {
   const [isFinished, setIsFinished] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const ficha = tipo ? anamneseData[tipo] : null;
+  const ficha = tipo ? anamneseData[tipo as keyof typeof anamneseData] : null;
 
   useEffect(() => {
     if (!clienteId || !tipo || !ficha) {
@@ -50,7 +49,6 @@ export default function AnamnesePage() {
   const handleAnswer = (questionId: string, value: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
     
-    // Auto-advance if not the last question
     if (ficha && currentStep < ficha.perguntas.length - 1) {
       setTimeout(() => {
         setCurrentStep((prev) => prev + 1);
@@ -61,13 +59,12 @@ export default function AnamnesePage() {
   const handleFirestoreError = (error: unknown, operationType: OperationType, path: string | null) => {
     const errInfo: FirestoreErrorInfo = {
       error: error instanceof Error ? error.message : String(error),
-      authInfo: {}, // Simplified for this context
+      authInfo: {},
       operationType,
       path
     };
     console.error('Firestore Error: ', JSON.stringify(errInfo));
     setError('Erro ao salvar as informações. Por favor, tente novamente.');
-    throw new Error(JSON.stringify(errInfo));
   };
 
   const handleSubmit = async () => {
@@ -89,7 +86,6 @@ export default function AnamnesePage() {
       
       setIsFinished(true);
       
-      // Redirect back to Wteste  hatsApp after a short delay
       setTimeout(() => {
         const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "5500000000000";
         window.location.href = `https://wa.me/${whatsappNumber}`;
@@ -104,11 +100,11 @@ export default function AnamnesePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-sm w-full text-center">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Ops! Algo deu errado</h2>
-          <p className="text-slate-600 mb-6">{error}</p>
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <div className="bg-zinc-900 p-8 rounded-2xl shadow-sm border border-zinc-800 max-w-sm w-full text-center">
+          <AlertCircle className="w-12 h-12 text-[#FFC5D3] mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-white mb-2">Ops! Algo deu errado</h2>
+          <p className="text-zinc-400 mb-6">{error}</p>
         </div>
       </div>
     );
@@ -116,16 +112,16 @@ export default function AnamnesePage() {
 
   if (isFinished) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-sm w-full text-center"
+          className="bg-zinc-900 p-8 rounded-2xl shadow-sm border border-zinc-800 max-w-sm w-full text-center"
         >
-          <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Ficha Concluída!</h2>
-          <p className="text-slate-600 mb-4">Suas respostas foram salvas com sucesso. Você será redirecionado para o WhatsApp em instantes.</p>
-          <Loader2 className="w-6 h-6 text-slate-400 animate-spin mx-auto" />
+          <CheckCircle2 className="w-16 h-16 text-[#FFC5D3] mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-2">Ficha Concluída!</h2>
+          <p className="text-zinc-400 mb-4">Suas respostas foram salvas com sucesso. Você será redirecionado para o WhatsApp em instantes.</p>
+          <Loader2 className="w-6 h-6 text-[#FFC5D3] animate-spin mx-auto" />
         </motion.div>
       </div>
     );
@@ -136,7 +132,21 @@ export default function AnamnesePage() {
   const currentQuestion = ficha.perguntas[currentStep];
   const progress = ((currentStep + 1) / ficha.perguntas.length) * 100;
 
-  {/* Progress Section */}
+  return (
+    <div className="min-h-screen bg-black flex flex-col items-center font-sans max-w-md mx-auto relative overflow-hidden">
+      
+      {/* Header com Logo */}
+      <div className="w-full pt-10 pb-6 px-6 text-center flex flex-col items-center">
+        <img src="/logo.png" alt="Logo Studio" className="w-32 h-auto mb-4 object-contain" />
+        <div className="text-[10px] uppercase tracking-[0.15em] text-[#FFC5D3] mb-1 font-bold">
+          Studio Estética Avançada
+        </div>
+        <h1 className="text-[22px] font-extrabold text-white tracking-tight">
+          Anamnese: {ficha.titulo}
+        </h1>
+      </div>
+
+      {/* Progress Section */}
       <div className="w-full px-6 mb-8">
         <div className="bg-zinc-800 h-[6px] w-full rounded-full overflow-hidden">
           <motion.div 
@@ -155,25 +165,6 @@ export default function AnamnesePage() {
         </div>
       </div>
 
-      {/* Progress Section */}
-      <div className="w-full px-6 mb-8">
-        <div className="bg-slate-200 h-[6px] w-full rounded-full overflow-hidden">
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-          />
-        </div>
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-tight">
-            Pergunta {currentStep + 1} de {ficha.perguntas.length}
-          </span>
-          <span className="text-[11px] font-bold text-emerald-600">
-            {Math.round(progress)}% concluído
-          </span>
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="flex-1 w-full flex flex-col px-6">
         <AnimatePresence mode="wait">
@@ -184,8 +175,8 @@ export default function AnamnesePage() {
             exit={{ opacity: 0, y: -20 }}
             className="w-full"
           >
-            <div className="glass p-8 rounded-[24px] shadow-sm mb-8 text-center min-h-[140px] flex items-center justify-center">
-              <h2 className="text-lg font-medium text-slate-800 leading-[1.4] max-w-[280px]">
+            <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-[24px] shadow-sm mb-8 text-center min-h-[140px] flex items-center justify-center">
+              <h2 className="text-lg font-medium text-white leading-[1.4] max-w-[280px]">
                 {currentQuestion.texto}
               </h2>
             </div>
@@ -196,8 +187,8 @@ export default function AnamnesePage() {
                 className={cn(
                   "w-full py-4 px-6 rounded-2xl border-2 transition-all duration-200 text-center font-bold text-lg",
                   answers[currentQuestion.id] === 'Sim' 
-                    ? "bg-emerald-50 border-emerald-500 text-emerald-700" 
-                    : "bg-white/80 border-slate-200 text-slate-600 hover:border-emerald-200 hover:bg-white"
+                    ? "bg-[#FFC5D3] border-[#FFC5D3] text-black" 
+                    : "bg-black border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-white"
                 )}
               >
                 Sim
@@ -208,8 +199,8 @@ export default function AnamnesePage() {
                 className={cn(
                   "w-full py-4 px-6 rounded-2xl border-2 transition-all duration-200 text-center font-bold text-lg",
                   answers[currentQuestion.id] === 'Não' 
-                    ? "bg-emerald-50 border-emerald-500 text-emerald-700" 
-                    : "bg-white/80 border-slate-200 text-slate-600 hover:border-emerald-200 hover:bg-white"
+                    ? "bg-[#FFC5D3] border-[#FFC5D3] text-black" 
+                    : "bg-black border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-white"
                 )}
               >
                 Não
@@ -245,7 +236,7 @@ export default function AnamnesePage() {
                 {currentStep > 0 && (
                     <button
                     onClick={() => setCurrentStep(prev => prev - 1)}
-                    className="text-slate-400 font-bold text-xs uppercase tracking-widest hover:text-slate-600 transition-colors"
+                    className="text-zinc-500 font-bold text-xs uppercase tracking-widest hover:text-zinc-300 transition-colors"
                     >
                     ← Voltar anterior
                     </button>
@@ -253,7 +244,7 @@ export default function AnamnesePage() {
             </div>
         )}
         
-        <div className="mt-4 text-[10px] text-slate-400 font-medium">
+        <div className="mt-4 text-[10px] text-zinc-500 font-medium">
           ID do Cliente: #{clienteId}
         </div>
       </div>
