@@ -89,7 +89,22 @@ export default function AnamnesePage() {
       
       setTimeout(() => {
         const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "5500000000000";
-        window.location.href = `https://wa.me/${whatsappNumber}`;
+        // Tenta pegar o nome da cliente se você passar na URL, senão usa o ID
+        const nomeCliente = searchParams.get('nome') || clienteId; 
+        
+        let textoMsg = `*NOVA FICHA PREENCHIDA* 📋✨\n\n`;
+        textoMsg += `*Procedimento:* ${ficha.titulo}\n`;
+        textoMsg += `*Cliente:* ${nomeCliente}\n\n`;
+        textoMsg += `*Respostas da Avaliação:*\n`;
+        
+        ficha.perguntas.forEach((p) => {
+          textoMsg += `• ${p.texto} *${answers[p.id]}*\n`;
+        });
+        
+        textoMsg += `\n✅ *Termo de Consentimento:* Assinado e Aceito digitalmente.\n`;
+        textoMsg += `ID de Segurança: #${clienteId}`;
+        
+        window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(textoMsg)}`;
       }, 2000);
 
     } catch (err) {
@@ -214,24 +229,46 @@ export default function AnamnesePage() {
       {/* Footer Actions */}
       <div className="w-full p-6 mt-auto bg-black border-t border-zinc-900 flex flex-col items-center">
         {currentStep === ficha.perguntas.length - 1 && Object.keys(answers).length === ficha.perguntas.length ? (
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="w-full bg-[#FFC5D3] text-black font-extrabold py-5 px-6 rounded-2xl shadow-lg shadow-[#FFC5D3]/20 flex items-center justify-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:shadow-none uppercase tracking-wider text-sm"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Processando...
-              </>
-            ) : (
-              <>
-                Finalizar Ficha
-                <Send className="w-4 h-4 ml-1" />
-              </>
-            )}
-          </motion.button>
+          <div className="w-full flex flex-col gap-5">
+            
+            {/* Bloco do Termo de Consentimento */}
+            <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl">
+              <h3 className="text-[#FFC5D3] font-bold text-xs uppercase tracking-wider mb-2">Termo de Consentimento</h3>
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="relative flex items-center mt-0.5">
+                  <input 
+                    type="checkbox" 
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-zinc-700 bg-black checked:bg-[#FFC5D3] transition-all" 
+                  />
+                  <CheckCircle2 className="absolute h-5 w-5 text-black opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none p-0.5" />
+                </div>
+                <span className="text-[11px] text-zinc-400 leading-relaxed">
+                  Declaro que as informações acima são verdadeiras. Fui devidamente orientada sobre o procedimento e compreendo os cuidados pós-atendimento, isentando a profissional de reações por omissão de dados de saúde.
+                </span>
+              </label>
+            </div>
+
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={handleSubmit}
+              disabled={isSubmitting || !acceptedTerms}
+              className="w-full bg-[#FFC5D3] text-black font-extrabold py-5 px-6 rounded-2xl shadow-lg shadow-[#FFC5D3]/20 flex items-center justify-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:shadow-none uppercase tracking-wider text-sm"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Salvando Ficha...
+                </>
+              ) : (
+                <>
+                  Assinar e Enviar
+                  <Send className="w-4 h-4 ml-1" />
+                </>
+              )}
+            </motion.button>
+          </div>
         ) : (
             <div className="h-[60px] flex items-center justify-center">
                 {currentStep > 0 && (
@@ -239,14 +276,14 @@ export default function AnamnesePage() {
                     onClick={() => setCurrentStep(prev => prev - 1)}
                     className="text-zinc-500 font-bold text-xs uppercase tracking-widest hover:text-zinc-300 transition-colors"
                     >
-                    ← Voltar anterior
+                    ← Voltar pergunta anterior
                     </button>
                 )}
             </div>
         )}
         
         <div className="mt-4 text-[10px] text-zinc-500 font-medium">
-          ID do Cliente: #{clienteId}
+          Protocolo de Atendimento: #{clienteId}
         </div>
       </div>
     </div>
