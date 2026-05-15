@@ -74,9 +74,17 @@ export default function AnamnesePage() {
     setIsSubmitting(true);
     setError(null);
 
+    // Captura os dados que o Bot mandou pela URL
+    const nomeUrl = searchParams.get('nome') || 'Não informado';
+    const telefoneUrl = searchParams.get('telefone') || 'Não informado';
+    const nomeExibicao = nomeUrl !== 'Não informado' ? nomeUrl : `Cliente #${clienteId}`;
+
     try {
+      // 1. Salva tudo completinho no Firebase
       const payload = {
         clienteId,
+        nomeCliente: nomeUrl,
+        telefoneCliente: telefoneUrl,
         tipo,
         titulo: ficha.titulo,
         respostas: answers,
@@ -84,25 +92,26 @@ export default function AnamnesePage() {
       };
 
       await addDoc(collection(db, 'fichas_anamnese'), payload);
-      
       setIsFinished(true);
       
+      // 2. Monta e envia a mensagem para a Michele
       setTimeout(() => {
-        const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "5500000000000";
-        // Tenta pegar o nome da cliente se você passar na URL, senão usa o ID
-        const nomeCliente = searchParams.get('nome') || clienteId; 
+        const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "5548991276509";
         
         let textoMsg = `*NOVA FICHA PREENCHIDA* 📋✨\n\n`;
         textoMsg += `*Procedimento:* ${ficha.titulo}\n`;
-        textoMsg += `*Cliente:* ${nomeCliente}\n\n`;
-        textoMsg += `*Respostas da Avaliação:*\n`;
+        textoMsg += `*Cliente:* ${nomeExibicao}\n`;
+        if (telefoneUrl !== 'Não informado') {
+          textoMsg += `*WhatsApp:* ${telefoneUrl}\n`;
+        }
+        textoMsg += `\n*Respostas da Avaliação:*\n`;
         
         ficha.perguntas.forEach((p) => {
           textoMsg += `• ${p.texto} *${answers[p.id]}*\n`;
         });
         
-        textoMsg += `\n✅ *Termo de Consentimento:* Assinado e Aceito digitalmente.\n`;
-        textoMsg += `ID de Segurança: #${clienteId}`;
+        textoMsg += `\n✅ *Termo de Consentimento:* Assinado e Aceito.\n`;
+        textoMsg += `ID: #${clienteId}`;
         
         window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(textoMsg)}`;
       }, 2000);
@@ -113,7 +122,7 @@ export default function AnamnesePage() {
       setIsSubmitting(false);
     }
   };
-
+  
   if (error) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6">
