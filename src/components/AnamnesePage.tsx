@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { db } from '../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { anamneseData } from '../types';
@@ -136,19 +136,23 @@ export default function AnamnesePage() {
   const currentQuestion = ficha.perguntas[currentStep];
   const progress = ((currentStep + 1) / ficha.perguntas.length) * 100;
 
-  return (
-    <div className="min-h-screen bg-frosted-gradient flex flex-col items-center font-sans max-w-md mx-auto relative overflow-hidden">
-      {/* Background purely for decorative purposes to match the 'viewport' feel if needed, 
-          but usually the container itself is enough in this sandboxed environment. */}
-      
-      {/* Header */}
-      <div className="w-full pt-10 pb-6 px-6 text-center">
-        <div className="text-[10px] uppercase tracking-[0.15em] text-slate-500 mb-1 font-bold">
-          Studio Estética Avançada
+  {/* Progress Section */}
+      <div className="w-full px-6 mb-8">
+        <div className="bg-zinc-800 h-[6px] w-full rounded-full overflow-hidden">
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            className="bg-[#FFC5D3] h-full rounded-full transition-all duration-500"
+          />
         </div>
-        <h1 className="text-[22px] font-extrabold text-slate-900 tracking-tight">
-          Anamnese: {ficha.titulo}
-        </h1>
+        <div className="flex justify-between items-center mt-2">
+          <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-tight">
+            Pergunta {currentStep + 1} de {ficha.perguntas.length}
+          </span>
+          <span className="text-[11px] font-bold text-[#FFC5D3]">
+            {Math.round(progress)}% concluído
+          </span>
+        </div>
       </div>
 
       {/* Progress Section */}
@@ -216,13 +220,13 @@ export default function AnamnesePage() {
       </div>
 
       {/* Footer Actions */}
-      <div className="w-full p-6 mt-auto bg-white border-t border-slate-100 flex flex-col items-center">
+      <div className="w-full p-6 mt-auto bg-black border-t border-zinc-900 flex flex-col items-center">
         {currentStep === ficha.perguntas.length - 1 && Object.keys(answers).length === ficha.perguntas.length ? (
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full bg-emerald-500 text-white font-bold py-5 px-6 rounded-2xl shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 disabled:bg-slate-300 disabled:shadow-none uppercase tracking-wider text-sm"
+            className="w-full bg-[#FFC5D3] text-black font-extrabold py-5 px-6 rounded-2xl shadow-lg shadow-[#FFC5D3]/20 flex items-center justify-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:shadow-none uppercase tracking-wider text-sm"
           >
             {isSubmitting ? (
               <>
