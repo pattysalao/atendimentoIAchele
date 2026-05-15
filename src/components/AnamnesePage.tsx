@@ -89,7 +89,7 @@ export default function AnamnesePage() {
       
       setIsFinished(true);
       
-      // Redirect back to WhatsApp after a short delay
+      // Redirect back to Wteste  hatsApp after a short delay
       setTimeout(() => {
         const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "5500000000000";
         window.location.href = `https://wa.me/${whatsappNumber}`;
