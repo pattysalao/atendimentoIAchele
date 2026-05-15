@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { loyaltyService } from '../lib/loyaltyService';
 import { auth } from '../lib/firebase';
 
-export default function LandingPage() {
+export default function LandingPage({ proId }: { proId?: string }) {
   const [siteData, setSiteData] = useState({
     nome: "Velo Beleza",
     slogan: "Realçando a tua beleza natural com exclusividade.",
@@ -21,10 +21,13 @@ export default function LandingPage() {
     ]
   });
 
-  // Carrega as configurações reais do Velo Beleza salvas pela Michele
+  // Carrega as configurações reais do Velo Beleza usando o ID da profissional na URL
   useEffect(() => {
     const carregarConfig = async () => {
-      const config = await loyaltyService.getConfigSite();
+      // Se a URL não tiver o ID (?pro=...), ele não busca nada e mostra os dados de demonstração
+      if (!proId) return; 
+      
+      const config = await loyaltyService.getConfigSite(proId);
       if (config) {
         setSiteData(prev => ({
           ...prev,
