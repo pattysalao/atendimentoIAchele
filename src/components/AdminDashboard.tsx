@@ -14,6 +14,7 @@ import {
   Save
 } from 'lucide-react';
 import { loyaltyService, ClienteFidelidade } from '../lib/loyaltyService';
+import { auth } from '../lib/firebase';
 
 export default function AdminDashboard() {
   const [clientes, setClientes] = useState<ClienteFidelidade[]>([]);
