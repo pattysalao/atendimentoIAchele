@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
   TrendingUp, 
@@ -9,7 +9,9 @@ import {
   Search,
   DollarSign,
   Gift,
-  Star
+  Star,
+  Settings,
+  Save
 } from 'lucide-react';
 import { loyaltyService, ClienteFidelidade } from '../lib/loyaltyService';
 
@@ -20,6 +22,12 @@ export default function AdminDashboard() {
   const [showSaleModal, setShowSaleModal] = useState(false);
   const [selectedCliente, setSelectedCliente] = useState<ClienteFidelidade | null>(null);
   const [valorVenda, setValorVenda] = useState('');
+  
+  // Estados do White-Label (Velo Delivery)
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [empresaNome, setEmpresaNome] = useState('Chele Lash Estética Avançada');
+  const [empresaSlogan, setEmpresaSlogan] = useState('Central de Atendimento e Fidelidade');
+  const [empresaLogo, setEmpresaLogo] = useState('');
 
   useEffect(() => {
     fetchClientes();
@@ -58,7 +66,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="h-full font-sans">
+    <div className="min-h-screen bg-black text-white p-6 md:p-10 font-sans">
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <motion.div 
@@ -202,8 +210,12 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <button className="mt-auto w-full py-5 bg-white text-black rounded-2xl font-black uppercase text-[10px] tracking-widest-plus hover:bg-pink-custom transition-all shadow-2xl">
-              Configurações Gerais
+            <button 
+              onClick={() => setShowSettingsModal(true)}
+              className="mt-auto w-full py-5 bg-white text-black rounded-2xl font-black uppercase text-[10px] tracking-widest-plus hover:bg-pink-custom transition-all shadow-2xl flex items-center justify-center gap-2"
+            >
+              <Settings size={16} />
+              Configurações da Empresa
             </button>
           </div>
         </section>
@@ -259,6 +271,63 @@ export default function AdminDashboard() {
                   className="w-full bg-pink-500 text-black py-4 rounded-xl font-bold text-lg hover:bg-pink-400 transition-colors shadow-lg shadow-pink-500/20"
                 >
                   Confirmar e Gerar Pontos
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {/* Modal de Configurações (White-Label Velo) */}
+        {showSettingsModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              onClick={() => setShowSettingsModal(false)}
+            />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative bg-zinc-900 border border-zinc-800 p-8 rounded-3xl w-full max-w-lg shadow-2xl"
+            >
+              <h3 className="text-2xl font-light mb-2">Configurações do <span className="text-pink-400">Studio</span></h3>
+              <p className="text-[10px] text-white/40 uppercase tracking-widest mb-6">Powered by Velo Delivery</p>
+              
+              <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                
+                {/* IDENTIDADE VISUAL */}
+                <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                  <h4 className="text-pink-custom text-[10px] font-black uppercase mb-4 tracking-widest">1. Identidade Visual</h4>
+                  <div className="space-y-3">
+                    <input type="text" placeholder="Nome do Studio" value={empresaNome} onChange={(e) => setEmpresaNome(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm font-bold text-white placeholder:text-white/20" />
+                    <input type="text" placeholder="Slogan / Frase de Efeito" value={empresaSlogan} onChange={(e) => setEmpresaSlogan(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
+                    <input type="text" placeholder="URL da Logomarca (.png ou .jpg)" value={empresaLogo} onChange={(e) => setEmpresaLogo(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
+                    <input type="text" placeholder="URL Vídeo Destaque (Formato Reels/MP4)" className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
+                  </div>
+                </div>
+
+                {/* CONTEÚDO E SEO */}
+                <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                  <h4 className="text-pink-custom text-[10px] font-black uppercase mb-4 tracking-widest">2. Site e SEO (Google)</h4>
+                  <div className="space-y-3">
+                    <textarea placeholder="Texto 'Sobre o Studio'..." className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white h-24 placeholder:text-white/20" />
+                    <input type="text" placeholder="CNPJ da Empresa" className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
+                    <input type="text" placeholder="Link do Google Meu Negócio" className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => {
+                    alert("Dados guardados! (Simulação antes de ligar ao Firebase)"); 
+                    setShowSettingsModal(false);
+                  }}
+                  className="w-full bg-pink-custom text-black py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-pink-400 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-pink-custom/20"
+                >
+                  <Save size={16} />
+                  Guardar Configurações
                 </button>
               </div>
             </motion.div>

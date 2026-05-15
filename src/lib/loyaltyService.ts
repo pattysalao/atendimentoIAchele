@@ -139,7 +139,7 @@ export const loyaltyService = {
     }
   },
 
-  async criarCampanha(titulo: string, desconto: string) {
+ async criarCampanha(titulo: string, desconto: string) {
     const path = "campanhas_marketing";
     try {
       await addDoc(collection(db, path), {
@@ -150,6 +150,29 @@ export const loyaltyService = {
       });
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, path);
+    }
+  },
+
+  // -----------------------------------------
+  // SAAS: Configurações do Mini-Site e White-Label
+  // -----------------------------------------
+  async salvarConfigSite(config: any) {
+    const path = "configuracoes_site";
+    try {
+      await setDoc(doc(db, path, "site_michele"), config, { merge: true });
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, path);
+    }
+  },
+
+  async getConfigSite() {
+    const path = "configuracoes_site";
+    try {
+      const snap = await getDoc(doc(db, path, "site_michele"));
+      return snap.exists() ? snap.data() : null;
+    } catch (error) {
+      handleFirestoreError(error, OperationType.GET, path);
+      return null;
     }
   }
 };
