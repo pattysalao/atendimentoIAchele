@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "FichaAnamnese": {
+      "title": "Ficha de Anamnese",
+      "description": "Dados coletados durante o preenchimento da ficha de anamnese pelo cliente.",
+      "type": "object",
+      "properties": {
+        "clienteId": {
+          "type": "string",
+          "description": "ID do cliente proveniente da URL."
+        },
+        "tipo": {
+          "type": "string",
+          "description": "Tipo de procedimento (cilios, lash_lifting, etc)."
+        },
+        "titulo": {
+          "type": "string",
+          "description": "Título humanizado do procedimento."
+        },
+        "respostas": {
+          "type": "object",
+          "description": "Mapa de IDs de perguntas para respostas (Sim/Não)."
+        },
+        "data_preenchimento": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp do servidor no momento do envio."
+        }
+      },
+      "required": ["clienteId", "tipo", "titulo", "respostas", "data_preenchimento"]
+    }
+  },
+  "firestore": {
+    "fichas_anamnese": {
+      "schema": "FichaAnamnese",
+      "description": "Coleção central de todas as fichas preenchidas."
+    }
+  }
+}

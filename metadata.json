@@ -1,0 +1,8 @@
+{
+  "name": "Anamnese Estética Express",
+  "description": "Plataforma mobile-first para preenchimento rápido de fichas de anamnese estética via WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

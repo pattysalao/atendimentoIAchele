@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Fallback: Deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper for basic ID validation
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Fichas Anamnese collection
+    match /fichas_anamnese/{fichaId} {
+      // Allow creation by anyone with a valid payload
+      allow create: if (
+        request.resource.data.keys().hasAll(['clienteId', 'tipo', 'titulo', 'respostas', 'data_preenchimento']) &&
+        request.resource.data.clienteId is string &&
+        request.resource.data.tipo is string &&
+        request.resource.data.titulo is string &&
+        request.resource.data.respostas is map &&
+        request.resource.data.data_preenchimento == request.time &&
+        isValidId(request.resource.data.clienteId)
+      );
+
+      // Read access could be restricted to admins if there was an auth system,
+      // but for this simple webview we deny read from the client for security.
+      allow read: if false;
+    }
+  }
+}
