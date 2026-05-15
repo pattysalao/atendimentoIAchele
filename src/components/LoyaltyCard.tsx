@@ -15,15 +15,30 @@ import { loyaltyService, ClienteFidelidade } from '../lib/loyaltyService';
 export default function LoyaltyCard({ telefone }: { telefone: string }) {
   const [cliente, setCliente] = useState<ClienteFidelidade | null>(null);
   const [loading, setLoading] = useState(true);
+  const [inputTelefone, setInputTelefone] = useState(''); // Estado para o campo de digitação
 
   useEffect(() => {
     async function load() {
+      // Se não tiver telefone na URL, para de carregar e mostra a tela de digitar
+      if (!telefone) {
+        setLoading(false);
+        return;
+      }
+      
       const data = await loyaltyService.getClienteByTelefone(telefone);
       setCliente(data);
       setLoading(false);
     }
     load();
   }, [telefone]);
+
+  // FUNÇÃO: Quando a cliente clica em "Ver Meus Pontos"
+  const handleAcessarCartao = () => {
+    if (!inputTelefone) return;
+    // Pega o número digitado, limpa espaços/símbolos e joga na URL
+    const numeroLimpo = inputTelefone.replace(/\D/g, '');
+    window.location.href = `/fidelidade?telefone=${numeroLimpo}`;
+  };
 
   if (loading) return (
     <div className="min-h-screen bg-black flex items-center justify-center">
@@ -32,6 +47,36 @@ export default function LoyaltyCard({ telefone }: { telefone: string }) {
         transition={{ repeat: Infinity, duration: 2 }}
         className="w-12 h-12 border-2 border-pink-500 rounded-full"
       />
+    </div>
+  );
+
+  // TELA NOVA: Se entrou sem telefone na URL, mostra o campo para digitar
+  if (!telefone && !cliente) return (
+    <div className="min-h-screen bg-black text-white p-8 flex flex-col items-center justify-center text-center font-sans">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-zinc-900 p-10 rounded-[2.5rem] border border-zinc-800 max-w-sm shadow-2xl"
+      >
+        <Gift size={48} className="text-pink-400 mx-auto mb-6" />
+        <h2 className="text-3xl font-black mb-2 uppercase tracking-tighter">Clube VIP</h2>
+        <p className="text-white/40 mb-8 text-sm">Digite seu número de WhatsApp para acessar seu saldo de Cashback e Pontos.</p>
+        
+        <input 
+          type="tel" 
+          placeholder="(DDD) 99999-9999" 
+          value={inputTelefone}
+          onChange={(e) => setInputTelefone(e.target.value)}
+          className="w-full bg-black border border-zinc-700 rounded-2xl py-4 px-6 mb-4 text-center font-black text-lg tracking-widest focus:outline-none focus:border-pink-500"
+        />
+        
+        <button 
+          onClick={handleAcessarCartao}
+          className="w-full bg-pink-500 text-black py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(236,72,153,0.3)]"
+        >
+          Ver Meus Pontos
+        </button>
+      </motion.div>
     </div>
   );
 
