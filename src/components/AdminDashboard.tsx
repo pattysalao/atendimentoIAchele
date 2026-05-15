@@ -108,12 +108,12 @@ export default function AdminDashboard() {
           <div className="bg-[#111] rounded-[2.5rem] border border-white/10 p-10 flex flex-col flex-1">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-xs uppercase tracking-[0.4em] text-pink-custom font-black">Gestão de Clientes</h2>
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={16} />
+             <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                 <input 
                   type="text" 
-                  placeholder="EX: JULIANA ALMEIDA" 
-                  className="bg-black border border-white/5 rounded-full py-3 pl-12 pr-6 text-[10px] uppercase tracking-widest font-bold focus:outline-none focus:border-pink-custom/40 w-64 placeholder:text-white/10"
+                  placeholder="BUSCAR CLIENTE..." 
+                  className="bg-zinc-800 border border-zinc-600 rounded-full py-3 pl-12 pr-6 text-[10px] uppercase tracking-widest font-bold focus:outline-none focus:border-pink-custom w-64 placeholder:text-zinc-400 shadow-inner text-white"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -299,23 +299,23 @@ export default function AdminDashboard() {
               <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
                 
                 {/* IDENTIDADE VISUAL */}
-                <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                <div className="bg-zinc-900 p-4 rounded-xl border border-zinc-700">
                   <h4 className="text-pink-custom text-[10px] font-black uppercase mb-4 tracking-widest">1. Identidade Visual</h4>
                   <div className="space-y-3">
-                    <input type="text" placeholder="Nome do Studio" value={empresaNome} onChange={(e) => setEmpresaNome(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm font-bold text-white placeholder:text-white/20" />
-                    <input type="text" placeholder="Slogan / Frase de Efeito" value={empresaSlogan} onChange={(e) => setEmpresaSlogan(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
-                    <input type="text" placeholder="URL da Logomarca (.png ou .jpg)" value={empresaLogo} onChange={(e) => setEmpresaLogo(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
-                    <input type="text" placeholder="URL Vídeo Destaque (Formato Reels/MP4)" className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
+                    <input type="text" placeholder="Nome do Studio" value={empresaNome} onChange={(e) => setEmpresaNome(e.target.value)} className="w-full bg-zinc-800 border border-zinc-600 rounded-lg py-3 px-4 focus:border-pink-500 text-sm font-bold text-white placeholder:text-zinc-400" />
+                    <input type="text" placeholder="Slogan / Frase de Efeito" value={empresaSlogan} onChange={(e) => setEmpresaSlogan(e.target.value)} className="w-full bg-zinc-800 border border-zinc-600 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-zinc-400" />
+                    <input type="text" placeholder="URL da Logomarca (.png ou .jpg)" value={empresaLogo} onChange={(e) => setEmpresaLogo(e.target.value)} className="w-full bg-zinc-800 border border-zinc-600 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-zinc-400" />
+                    <input type="text" placeholder="URL Vídeo Destaque (Formato Reels/MP4)" className="w-full bg-zinc-800 border border-zinc-600 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-zinc-400" />
                   </div>
                 </div>
 
                 {/* CONTEÚDO E SEO */}
-                <div className="bg-black/50 p-4 rounded-xl border border-white/5">
+                <div className="bg-zinc-900 p-4 rounded-xl border border-zinc-700">
                   <h4 className="text-pink-custom text-[10px] font-black uppercase mb-4 tracking-widest">2. Site e SEO (Google)</h4>
                   <div className="space-y-3">
-                    <textarea placeholder="Texto 'Sobre o Studio'..." className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white h-24 placeholder:text-white/20" />
-                    <input type="text" placeholder="CNPJ da Empresa" className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
-                    <input type="text" placeholder="Link do Google Meu Negócio" className="w-full bg-black border border-zinc-800 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-white/20" />
+                    <textarea placeholder="Texto 'Sobre o Studio'..." className="w-full bg-zinc-800 border border-zinc-600 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white h-24 placeholder:text-zinc-400" />
+                    <input type="text" placeholder="CNPJ da Empresa" className="w-full bg-zinc-800 border border-zinc-600 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-zinc-400" />
+                    <input type="text" placeholder="Link do Google Meu Negócio" className="w-full bg-zinc-800 border border-zinc-600 rounded-lg py-3 px-4 focus:border-pink-500 text-sm text-white placeholder:text-zinc-400" />
                   </div>
                 </div>
 

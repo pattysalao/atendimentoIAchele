@@ -9,7 +9,7 @@ export default function LandingPage() {
     slogan: "Realçando a tua beleza natural com exclusividade.",
     logo: "/logo.png",
     // Link de exemplo de um vídeo MP4 (podes trocar pelo link de um Reels real depois)
-    videoReels: "https://cdn.pixabay.com/video/2020/05/21/40008-424560113_large.mp4",
+    videoReels: "https://assets.mixkit.co/videos/preview/mixkit-woman-putting-on-makeup-in-front-of-a-mirror-41480-large.mp4",
     telefoneContato: "5548991276509",
     cnpj: "00.000.000/0001-00",
     endereco: "São José, SC",
@@ -130,13 +130,49 @@ export default function LandingPage() {
           <div className="h-[1px] flex-1 bg-zinc-800" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {siteData.servicos.map((servico) => (
             <div key={servico.id} className="bg-zinc-950 border border-zinc-900 p-6 rounded-2xl flex flex-col items-center text-center hover:border-zinc-800 transition-colors">
               <h3 className="font-bold text-lg mb-2">{servico.nome}</h3>
               <p className="text-[#FFC5D3] font-mono">{servico.preco}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* AVALIAÇÕES & FAQ */}
+      <section className="px-6 py-12 bg-zinc-950 border-y border-zinc-900">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+          {/* Avaliações */}
+          <div>
+            <h2 className="text-[#FFC5D3] text-xs font-black uppercase tracking-[0.3em] mb-6">O que dizem</h2>
+            <div className="space-y-4">
+                <div className="bg-black border border-zinc-800 p-5 rounded-2xl">
+                  <div className="flex text-yellow-500 mb-2"><Star size={12}/><Star size={12}/><Star size={12}/><Star size={12}/><Star size={12}/></div>
+                  <p className="text-sm text-zinc-300 italic mb-2">"O melhor lifting que já fiz! Durou horrores."</p>
+                  <p className="text-[10px] font-bold text-zinc-500 uppercase">— Juliana A.</p>
+                </div>
+                <div className="bg-black border border-zinc-800 p-5 rounded-2xl">
+                  <div className="flex text-yellow-500 mb-2"><Star size={12}/><Star size={12}/><Star size={12}/><Star size={12}/><Star size={12}/></div>
+                  <p className="text-sm text-zinc-300 italic mb-2">"Ambiente incrível e atendimento impecável."</p>
+                  <p className="text-[10px] font-bold text-zinc-500 uppercase">— Marcos S.</p>
+                </div>
+            </div>
+          </div>
+          {/* FAQ */}
+          <div>
+            <h2 className="text-[#FFC5D3] text-xs font-black uppercase tracking-[0.3em] mb-6">Dúvidas Frequentes</h2>
+            <div className="space-y-4">
+                <div className="bg-black border border-zinc-800 p-5 rounded-2xl">
+                  <h4 className="font-bold text-sm mb-2 text-white flex items-center gap-2">Quanto tempo dura?</h4>
+                  <p className="text-xs text-zinc-400 pl-2">Em média 20 a 30 dias, dependendo dos cuidados em casa.</p>
+                </div>
+                <div className="bg-black border border-zinc-800 p-5 rounded-2xl">
+                  <h4 className="font-bold text-sm mb-2 text-white flex items-center gap-2">Dói para fazer?</h4>
+                  <p className="text-xs text-zinc-400 pl-2">Não! É totalmente indolor, muitas clientes até dormem.</p>
+                </div>
+            </div>
+          </div>
         </div>
       </section>
 
