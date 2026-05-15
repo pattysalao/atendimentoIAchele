@@ -37,6 +37,7 @@ export default function AnamnesePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const ficha = tipo ? anamneseData[tipo as keyof typeof anamneseData] : null;
 
