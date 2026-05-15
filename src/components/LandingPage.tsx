@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Calendar, Star, MessageCircle, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { loyaltyService } from '../lib/loyaltyService';
 
 export default function LandingPage() {
-  // Num cenário real ligado ao Firebase, estes dados viriam do loyaltyService.getConfigSite()
-  const siteData = {
-    nome: "Chele Lash",
+  const [siteData, setSiteData] = useState({
+    nome: "Velo Beleza",
     slogan: "Realçando a tua beleza natural com exclusividade.",
     logo: "/logo.png",
-    // Link de exemplo de um vídeo MP4 (podes trocar pelo link de um Reels real depois)
     videoReels: "https://assets.mixkit.co/videos/preview/mixkit-woman-putting-on-makeup-in-front-of-a-mirror-41480-large.mp4",
     telefoneContato: "5548991276509",
     cnpj: "00.000.000/0001-00",
@@ -18,7 +18,24 @@ export default function LandingPage() {
       { id: 2, nome: "Extensão de Cílios", preco: "R$ 180" },
       { id: 3, nome: "Limpeza de Pele", preco: "R$ 150" }
     ]
-  };
+  });
+
+  // Carrega as configurações reais do Velo Beleza salvas pela Michele
+  useEffect(() => {
+    const carregarConfig = async () => {
+      const config = await loyaltyService.getConfigSite();
+      if (config) {
+        setSiteData(prev => ({
+          ...prev,
+          nome: config.nome || prev.nome,
+          slogan: config.slogan || prev.slogan,
+          logo: config.logo || prev.logo,
+          videoReels: config.video || prev.videoReels
+        }));
+      }
+    };
+    carregarConfig();
+  }, []);
 
   // 1. DADOS ESTRUTURADOS (SEO GOOGLE)
   // Isto é lido de forma invisível pelo Google para indexar o negócio localmente
@@ -186,7 +203,7 @@ export default function LandingPage() {
         <p className="text-[10px] text-zinc-600">© {new Date().getFullYear()} {siteData.nome}. Todos os direitos reservados.</p>
         
         <div className="mt-12 inline-block px-4 py-2 rounded-full border border-zinc-900 bg-zinc-950">
-           <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Powered by Velo Delivery</p>
+           <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Powered by Velo Beleza</p>
         </div>
       </footer>
 
