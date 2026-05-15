@@ -387,18 +387,23 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <button 
+               <button 
                   onClick={async () => {
-                    const configSite = {
-                      nome: empresaNome,
-                      slogan: empresaSlogan,
-                      logo: empresaLogo,
-                      video: empresaVideo
-                    };
-                    await loyaltyService.salvarConfigSite(configSite);
-                    alert("Configurações do Velo Beleza salvas com sucesso!"); 
-                    setShowSettingsModal(false);
-                    window.location.reload(); // Recarrega para aplicar a logo nova
+                    try {
+                      const configSite = {
+                        nome: empresaNome,
+                        slogan: empresaSlogan,
+                        logo: empresaLogo,
+                        video: empresaVideo
+                      };
+                      await loyaltyService.salvarConfigSite(configSite);
+                      alert("Configurações do Velo Beleza salvas com sucesso!"); 
+                      setShowSettingsModal(false);
+                      window.location.reload(); 
+                    } catch (error) {
+                      console.error("Erro ao salvar:", error);
+                      alert("Erro de permissão no Firebase! Verifique as regras do Firestore.");
+                    }
                   }}
                   className="w-full bg-pink-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-pink-400 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(236,72,153,0.3)] mt-6"
                 >
