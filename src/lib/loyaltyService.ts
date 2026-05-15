@@ -157,19 +157,19 @@ export const loyaltyService = {
   // -----------------------------------------
   // SAAS: Configurações do Mini-Site e White-Label
   // -----------------------------------------
-  async salvarConfigSite(config: any) {
+  async salvarConfigSite(userId: string, config: any) {
     const path = "configuracoes_site";
     try {
-      await setDoc(doc(db, path, "site_michele"), config, { merge: true });
+      await setDoc(doc(db, path, userId), config, { merge: true });
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, path);
     }
   },
 
-  async getConfigSite() {
+  async getConfigSite(userId: string) {
     const path = "configuracoes_site";
     try {
-      const snap = await getDoc(doc(db, path, "site_michele"));
+      const snap = await getDoc(doc(db, path, userId));
       return snap.exists() ? snap.data() : null;
     } catch (error) {
       handleFirestoreError(error, OperationType.GET, path);

@@ -40,7 +40,10 @@ export default function AdminDashboard() {
   // Busca os dados salvos no Firebase ao carregar o painel
   useEffect(() => {
     const carregarDadosSite = async () => {
-      const config = await loyaltyService.getConfigSite();
+      const user = auth.currentUser;
+      if (!user) return; // Se não tiver usuário logado, para aqui
+      
+      const config = await loyaltyService.getConfigSite(user.uid);
       if (config) {
         if (config.nome) setEmpresaNome(config.nome);
         if (config.slogan) setEmpresaSlogan(config.slogan);
@@ -410,6 +413,12 @@ export default function AdminDashboard() {
                <button 
                   onClick={async () => {
                     try {
+                      const user = auth.currentUser;
+                      if (!user) {
+                        alert("Sessão expirada. Faça login novamente.");
+                        return;
+                      }
+
                       const configSite = {
                         nome: empresaNome,
                         slogan: empresaSlogan,
@@ -419,7 +428,7 @@ export default function AdminDashboard() {
                         cnpj: empresaCnpj,
                         googleLink: empresaGoogleLink
                       };
-                      await loyaltyService.salvarConfigSite(configSite);
+                      await loyaltyService.salvarConfigSite(user.uid, configSite);
                       alert("Configurações do Velo Beleza salvas com sucesso!"); 
                       setShowSettingsModal(false);
                       window.location.reload(); 

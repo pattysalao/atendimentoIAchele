@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { MapPin, Calendar, Star, MessageCircle, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { loyaltyService } from '../lib/loyaltyService';
+import { auth } from '../lib/firebase';
 
 export default function LandingPage() {
   const [siteData, setSiteData] = useState({
