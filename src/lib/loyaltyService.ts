@@ -11,7 +11,8 @@ import {
   getDoc,
   setDoc
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { signInWithPopup, signOut } from "firebase/auth";
+import { db, auth, googleProvider } from "./firebase";
 
 
 export enum OperationType {

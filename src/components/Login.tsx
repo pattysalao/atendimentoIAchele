@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { loyaltyService } from '../lib/loyaltyService';
-import { auth } from '../lib/firebase';
 import { Sparkles, ShieldCheck, Star } from 'lucide-react';
 
 export default function Login() {
