@@ -147,16 +147,29 @@ export const loyaltyService = {
         titulo,
         desconto,
         ativa: true,
-        validade: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
+        validade: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       });
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, path);
     }
   },
 
-  // -----------------------------------------
-  // SAAS: Configurações do Mini-Site e White-Label
-  // -----------------------------------------
+  // --- NOVAS FUNÇÕES DE SAAS / MULTI-TENANT ---
+
+  async loginComGoogle() {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      return result.user;
+    } catch (error) {
+      console.error("Erro no login:", error);
+      return null;
+    }
+  },
+
+  async logout() {
+    await signOut(auth);
+  },
+
   async salvarConfigSite(userId: string, config: any) {
     const path = "configuracoes_site";
     try {
